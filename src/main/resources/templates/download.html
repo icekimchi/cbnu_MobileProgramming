@@ -1,16 +1,52 @@
+<!DOCTYPE html>
 <html>
-    <body>
-        <a href="/upload"> <--  업로드 페이지로 </a>
-        <h2> 파일 다운로드 페이지</h2>
-        <span>REST 요청을 보내 파일 목록을 불러오고, 다음 li에 다운로드 링크와 함께 삽입하십시오.</span>
-        <span>파일 목록을 불러오는 예제에 대해서는 <a href="https://github.com/java-lesson-cbnu/android-lesson-01">이전 예제 레포지토리</a>를 참고하세요. </span>
-        <li id="file_list">
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-        </li>
-    </body>
-    <head>
-        <script type="application/javascript">
-            // 이곳에 코드를 작성하십시오.
-        </script>
-    </head>
+        #file_list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #file_list li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<a href="/upload"> <--  업로드 페이지로 </a>
+<h2> 파일 다운로드 페이지</h2>
+<ul id="file_list">
+</ul>
+
+<script type="application/javascript">
+        async function loadFileList() {
+            try {
+                const response = await fetch('/api/v1/rest/aws/list'); // 파일 목록을 가져올 REST 엔드포인트 지정
+                const result = await response.json();
+                const fileList = document.getElementById("file_list");
+                for (let i = 0; i < result.length; i++) {
+                    let li = document.createElement("li");
+                    let link = document.createElement("a");
+                    link.href = "/api/v1/rest/aws/download?fileName=" + result[i]; // 파일 다운로드 경로를 설정
+                    link.textContent = result[i]; // 다운로드 링크 텍스트 설정
+                    li.appendChild(link);
+                    fileList.appendChild(li);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        loadFileList();
+    </script>
+</body>
 </html>
