@@ -1,13 +1,44 @@
 <html>
-    <body>
-        <h1> 사용자 대시보드 <a href="/admin">(관리자 대시보드로 이동)</a></h1>
-        <span> REST 요청을 보내 파일 목록을 불러오고, 다음 li에 다운로드 링크와 함께 삽입하십시오. </span>
-        <span>REST로 데이터 목록을 불러오는 예제는 <a href="https://github.com/java-lesson-cbnu/android-lesson-01">1번 예제 레포지토리</a>를 참고하세요. </span>
-        <ul id="dataList">
+<body>
+<h1> 사용자 대시보드 <a href="/admin">(관리자 대시보드로 이동)</a></h1>
+<span> REST 요청을 보내 파일 목록을 불러오고, 다음 li에 다운로드 링크와 함께 삽입하십시오. </span>
+<span>REST로 데이터 목록을 불러오는 예제는 <a href="https://github.com/java-lesson-cbnu/android-lesson-01">1번 예제 레포지토리</a>를 참고하세요. </span>
+<ul id="dataList">
 
-        </ul>
-    </body>
-    <script>
-        // 이곳에 코드를 구현하십시오.
-    </script>
+</ul>
+</body>
+<script>
+    async function fetchData() {
+        const response = await fetch('/api/v1/data/list', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            console.error('Network response was not ok');
+            throw new Error('Network response was not ok');
+        }
+
+        return response.json();
+    }
+
+    async function displayData() {
+        const dataList = document.getElementById('dataList');
+        try {
+            const data = await fetchData();
+
+            data.forEach(({ text }) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = text;
+                dataList.appendChild(listItem);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    displayData();
+</script>
 </html>
