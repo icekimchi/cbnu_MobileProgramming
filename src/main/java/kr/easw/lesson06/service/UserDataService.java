@@ -10,7 +10,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -41,7 +43,7 @@ public class UserDataService {
         repository.save(entity);
     }
 
-    // 이 메서드는 유저를 생성하고, 생성된 유저의 토큰을 반환합니다.
+    // 이 메서드는 유저를 생성하고, 생   성된 유저의 토큰을 반환합니다.
     @Nullable
     public UserAuthenticationDto createTokenWith(UserDataEntity userDataEntity) {
         // 만약 유저가 존재하지 않는다면, BadCredentialsException을 던집니다.
@@ -54,5 +56,22 @@ public class UserDataService {
             return new UserAuthenticationDto(jwtService.generateToken(archivedEntity.getUserId()));
         // 만약 비밀번호가 일치하지 않는다면, BadCredentialsException을 던집니다.
         throw new BadCredentialsException("Credentials invalid");
+    }
+
+    public List<String> listUsers() {
+        List<UserDataEntity> userList = repository.findAll();
+        List<String> userIdList = userList.stream()
+                .map(UserDataEntity::getUserId)
+                .collect(Collectors.toList());
+        return userIdList;
+    }
+
+    public void removeUser(String userId) {
+        Optional<UserDataEntity> userOptional = repository.findUserDataEntityByUserId(userId);
+        if (userOptional.isPresent()) {
+            repository.delete(userOptional.get());
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
     }
 }

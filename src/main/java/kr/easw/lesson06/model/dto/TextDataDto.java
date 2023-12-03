@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 // 이 클래스를 엔티티로 선언합니다.
 // 엔티티로 선언된 클래스는 DB의 테이블과 매핑됩니다.

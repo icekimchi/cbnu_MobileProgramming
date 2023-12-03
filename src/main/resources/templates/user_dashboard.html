@@ -8,6 +8,37 @@
         </ul>
     </body>
     <script>
-        // 이곳에 코드를 구현하십시오.
-    </script>
+    async function fetchData() {
+        const response = await fetch('/api/v1/data/list', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            console.error('Network response was not ok');
+            throw new Error('Network response was not ok');
+        }
+
+        return response.json();
+    }
+
+    async function displayData() {
+        const dataList = document.getElementById('dataList');
+        try {
+            const data = await fetchData();
+
+            data.forEach(({ text }) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = text;
+                dataList.appendChild(listItem);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    displayData();
+</script>
 </html>

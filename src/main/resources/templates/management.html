@@ -30,7 +30,7 @@
         // 페이지 로드 시, 비동기로 유저 목록을 불러옵니다.
         (async () => {
             // api/v1/rest/user/list로 GET 요청을 보냅니다.
-            const response = await fetch('/api/v1/rest/user/list');
+            const response = await fetch('/api/v1/user/list');
             // 응답을 JSON으로 파싱합니다.
             const result = await response.json();
             // 응답을 순회(iterate)하며, 유저 목록을 ul#userList에 삽입합니다.
